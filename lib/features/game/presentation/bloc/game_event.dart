@@ -10,3 +10,14 @@ class StartGameEvent extends GameEvent {
     required this.wordLength,
   });
 }
+  class EnterAttemptEvent extends GameEvent {
+}
+class EnterKeyEvent extends GameEvent {
+  final String key;
+  EnterKeyEvent({
+    required this.key,
+  });
+}
+class DeleteKeyEvent extends GameEvent {
+  DeleteKeyEvent();
+}

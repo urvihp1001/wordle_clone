@@ -29,7 +29,7 @@ class GameKeyboard extends StatelessWidget {
          _buildKeyboardRow(context, state, row),
          //for every row in rows, build a row of keys
          ),SizedBox(height: 10,),
-          _buildActionRow(state),
+          _buildActionRow(context,state),
           
         ],
         ),
@@ -43,7 +43,9 @@ class GameKeyboard extends StatelessWidget {
       children: row.split('').map((key)=>_buildKey(context, state, key)).toList(),//extract each letter in row while iterating thru every row so 3 build rows maybe reqd
     );
   }
-  Widget _buildActionRow(GameState state){
+  Widget _buildActionRow(BuildContext context, GameState state){
+    var currentAttempt = state.currentAttempt ?? '';
+    var word=state.word??'';
     return Row(
       children: [
         Expanded(child: AspectRatio(
@@ -65,6 +67,29 @@ class GameKeyboard extends StatelessWidget {
             ),
           ),
         )),
+         Expanded(child: AspectRatio(
+          aspectRatio: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: ElevatedButton(
+              onPressed: currentAttempt.length<word.length?null:onSubmit,
+              //if the current attempt is less than the word length, disable the button
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child:Text(
+                'Enter',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.surface,
+              ),
+              ),
+            ),
+          ),
+        )),
       ],
     );
   }
@@ -80,12 +105,14 @@ class GameKeyboard extends StatelessWidget {
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-        
+
         ),
+        backgroundColor: _getKeyColor(context, state, key),
         ),
         child: Text(
           key,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            color: _getTextColor(context, state, key),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -94,4 +121,60 @@ class GameKeyboard extends StatelessWidget {
     )
     );
   }
+  //color the keyboard keys based on the attempts
+  _getKeyColor(BuildContext context, GameState state, String key) {
+    final attempts = state.attempts ?? [];
+    final word = state.word ?? '';
+    for (final attempt in attempts) {
+     
+        for(int i = 0; i < attempt.length; i++) {
+          if(attempt[i]==key && key==word[i])
+          {
+            return AppColors.green;
+          }
+
+        }
+    }
+    if (word.contains(key)) {
+     for(final attempt in attempts)
+     {
+      if(attempt.contains(key))
+      {
+        return AppColors.yellow;
+      }
+     }
+    }
+  
+  for(final attempt in attempts)
+  {
+    if(attempt.contains(key)) //but word doesnt
+    {
+      return Theme.of(context).colorScheme.onSurfaceVariant;
+    }
+        
+  }
+  return Theme.of(context).colorScheme.surface;
+}
+
+Color _getTextColor(BuildContext context, GameState state, String key) {
+  final attempts = state.attempts ?? [];
+  final word = state.word ?? '';
+  for (final attempt in attempts) {
+    for (int i = 0; i < attempt.length; i++) {
+      if (attempt[i] == key && key == word[i]) {
+        return Theme.of(context).colorScheme.surface;
+      }
+    }
+  }
+  if (word.contains(key)) {
+    for (final attempt in attempts) {
+      if (attempt.contains(key)) {
+        return Theme.of(context).colorScheme.surface;
+      }
+    }
+  }
+  
+  return Theme.of(context).colorScheme.onSurface;
+}
+
 }

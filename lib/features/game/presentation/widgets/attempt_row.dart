@@ -21,11 +21,14 @@ class AttemptRow extends StatelessWidget {
           children: List.generate(
            4,
             (letterIndex) {
+              var text= _getLetter(letterIndex, attemptIndex, previousAttempts, currentAttempt, isCurrentAttempt);
+              var boxColor=getBoxColor(context, text, word, attemptIndex, letterIndex, previousAttempts, isCurrentAttempt);
+              var textColor=getTextColor(context, text, word, attemptIndex, letterIndex, previousAttempts, isCurrentAttempt);
               return Expanded(child:
                 LetterBoxWidget(
-                  text: 'U',
-                  boxColor: AppColors.green,
-                  textColor: AppColors.surface
+                  text: text,
+                  boxColor: boxColor,
+                  textColor: textColor,
                 )
               );
             }
@@ -35,4 +38,44 @@ class AttemptRow extends StatelessWidget {
       }
     );
   }
+  //add correct letter/space to the letter box
+  String _getLetter(int letterIndex, int attemptIndex, List<String> previousAttempts, String currentAttempt, bool isCurrentAttempt) {
+    if (attemptIndex < previousAttempts.length) {
+      return previousAttempts[attemptIndex][letterIndex];
+    } else if (isCurrentAttempt) {
+      if (letterIndex < currentAttempt.length) {
+        return currentAttempt[letterIndex];
+      } else {
+        return '';
+      }
+    } else {
+      return '';
+    }
+  
+  }
+  //add correct color to the letter box
+  Color? getBoxColor(BuildContext context, String letter, String word, int attemptIndex, int letterIndex, List<String> previousAttempts, bool isCurrentAttempt) {
+if(attemptIndex>=previousAttempts.length||letter.isEmpty || isCurrentAttempt){ //adding lettters to middle of the word or empty or next position
+  return null;
+}
+else if (word[letterIndex] == letter) { //correct letter
+  return AppColors.green;
+  }
+else if (word.contains(letter)) { //present letter
+  return AppColors.yellow;
+  }
+  return Theme.of(context).colorScheme.onSurfaceVariant; //not present letter
+  }
+
+    Color? getTextColor(BuildContext context, String letter, String word, int attemptIndex, int letterIndex, List<String> previousAttempts, bool isCurrentAttempt) {
+if(attemptIndex>=previousAttempts.length||letter.isEmpty || isCurrentAttempt){ //adding lettters to middle of the word or empty or next position
+  return Theme.of(context).colorScheme.onSurface;
+  
+}
+else if (word[letterIndex] == letter || word.contains(letter)) { 
+  return Theme.of(context).colorScheme.surface;
+  }
+  return Theme.of(context).colorScheme.onSurface; //not present letter
+  }
+
 }

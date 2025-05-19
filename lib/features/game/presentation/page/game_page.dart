@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_urvi_version/core/get_it/get_it.dart';
 import 'package:wordle_urvi_version/features/game/presentation/bloc/game_bloc.dart';
 import 'package:wordle_urvi_version/features/game/presentation/bloc/game_event.dart';
+import 'package:wordle_urvi_version/features/game/presentation/bloc/game_state.dart';
 import 'package:wordle_urvi_version/features/game/presentation/widgets/attempt_widget.dart';
+import 'package:wordle_urvi_version/features/game/presentation/widgets/game_keyboard.dart';
 
 class GamePage extends StatelessWidget {
   final int attemptsCount;
@@ -23,16 +25,27 @@ class GamePage extends StatelessWidget {
       create: (context) => getIt<GameBloc>()
        ..add(StartGameEvent(
             attemptsCount: attemptsCount, wordLength: wordLength)),
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Game'),
-          ),
-          body:Column(children: [
-            SizedBox(
-              height: 20,
-            ),
-       AttemptWidget()
-          ],)
+        child: BlocBuilder<GameBloc,GameState>(
+          builder: (context,state) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Game'),
+              ),
+              body:Column(children: [
+                SizedBox(
+                  height: 20,
+                ),
+                   AttemptWidget(),
+                   Spacer(),
+                   GameKeyboard(onKeyPressed: (v){
+              context.read<GameBloc>().add(EnterKeyEvent(key: v));
+                   },
+                   onDelete: (){},
+                   onSubmit: (){},
+                   )
+              ],)
+            );
+          }
         ),
       
     );

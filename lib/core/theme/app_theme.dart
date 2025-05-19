@@ -14,6 +14,7 @@ class AppTheme{
       onError: AppColors.surface, 
       surface: AppColors.surface, 
       onSurface: AppColors.text,
+      onSurfaceVariant: AppColors.onSurface
       ),
       textTheme: const TextTheme(
         bodySmall: TextStyle(

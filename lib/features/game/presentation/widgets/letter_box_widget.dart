@@ -13,9 +13,11 @@ class LetterBoxWidget extends StatelessWidget {
     margin: EdgeInsets.symmetric(horizontal: 3),
     padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
-    
+    border:  boxColor == null
+              ? Border.all(color: Theme.of(context).colorScheme.onSurface)
+              : null, // Add border only if boxColor is null
       borderRadius: BorderRadius.circular(8),
-      color: boxColor ?? Theme.of(context).colorScheme.primary,
+      color: boxColor ,
     ),
     child: Center(
       child: Text(

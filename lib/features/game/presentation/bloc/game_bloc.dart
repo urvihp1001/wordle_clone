@@ -1,8 +1,10 @@
+import 'package:wordle_urvi_version/features/game/domain/game_repository.dart';
 import 'package:wordle_urvi_version/features/game/presentation/bloc/game_event.dart';
 import 'package:wordle_urvi_version/features/game/presentation/bloc/game_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 class GameBloc extends Bloc<GameEvent, GameState> {
- GameBloc() : super(GameState.initial()) {
+  final GameRepository gameRepository;
+ GameBloc({required this.gameRepository}) : super(GameState.initial()) {
     on<StartGameEvent>(onStartGameEvent);
     on<EnterKeyEvent>(onEnterKeyEvent);
     on<DeleteKeyEvent>(onDeleteKeyEvent);
@@ -10,6 +12,26 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
   Future<void> onStartGameEvent(
       StartGameEvent event, Emitter<GameState> emit) async {
+        emit(state.copyWith(
+      status: GameStatus.loading));
+      var result = await gameRepository.getRandomWord(event.wordLength);
+      result.fold((failure) {
+        emit(state.copyWith(
+          status: GameStatus.error,
+          errorMessage: failure.message,
+        ));
+      }, (word) {
+        emit(state.copyWith(
+          status: GameStatus.inProgress,
+          word: word,
+          attemptsCount: event.attemptsCount,
+        ));
+      });//it can go either way
+      //either it will return a word or an error
+      //if it returns a word, then emit the state with the word
+      //if it returns an error, then emit the state with the error message
+      //emit the state with the status as in progress-- updated from loading
+      //and the word as the random word
     emit(state.copyWith(
       status: GameStatus.inProgress,
       word:'TEST',

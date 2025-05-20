@@ -5,7 +5,12 @@ var getIt=GetIt.instance;
 void setup(){
   registerBloc();
 }
+void registerRepository(){
+//  getIt.registerLazySingleton(() => GameRepository());
+  //getIt.registerLazySingleton(() => GameRepositoryImpl());
+  //registering the repository
+}
 void registerBloc(){
-  getIt.registerFactory(() => GameBloc());
+  getIt.registerFactory(() => GameBloc(gameRepository: getIt()));
   
 }

@@ -59,6 +59,24 @@ class GameBloc extends Bloc<GameEvent, GameState> {
             currentAttempt: '',
         ));
 
+        if(currentAttempt==word){
+          emit(state.copyWith(
+            status: GameStatus.win,
+          ));//if the current attempt is equal to the word, then user wins
+          //tell the game_page to show the win dialog
+          //event: attempt==word
+          //logic: if the current attempt is equal to the word, then user wins-- status changes
+          //result: show the win dialog
+          //logic: if the current attempt is equal to the word, then user wins-- status changes
+          //result: show the win dialog
+        }
+       
+        else if((state.attempts?.length??0)==(state.attemptsCount??0)){
+          emit(state.copyWith(
+            status: GameStatus.loss,
+          ));
+        }
+
   }
   
 }

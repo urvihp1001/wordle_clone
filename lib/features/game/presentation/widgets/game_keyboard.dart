@@ -162,7 +162,7 @@ Color _getTextColor(BuildContext context, GameState state, String key) {
   for (final attempt in attempts) {
     for (int i = 0; i < attempt.length; i++) {
       if (attempt[i] == key && key == word[i]) {
-        return Theme.of(context).colorScheme.surface;
+        return Theme.of(context).colorScheme.surface; //if the key is in the word and in the same position, color letter grey
       }
     }
   }

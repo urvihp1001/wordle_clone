@@ -6,6 +6,8 @@ import 'package:wordle_urvi_version/features/game/presentation/bloc/game_event.d
 import 'package:wordle_urvi_version/features/game/presentation/bloc/game_state.dart';
 import 'package:wordle_urvi_version/features/game/presentation/widgets/attempt_widget.dart';
 import 'package:wordle_urvi_version/features/game/presentation/widgets/game_keyboard.dart';
+import 'package:wordle_urvi_version/features/game/presentation/widgets/lossDialog.dart';
+import 'package:wordle_urvi_version/features/game/presentation/widgets/winDialog.dart';
 
 class GamePage extends StatelessWidget {
   final int attemptsCount;
@@ -25,7 +27,7 @@ class GamePage extends StatelessWidget {
       create: (context) => getIt<GameBloc>()
        ..add(StartGameEvent(
             attemptsCount: attemptsCount, wordLength: wordLength)),
-        child: BlocBuilder<GameBloc,GameState>(
+        child: BlocConsumer<GameBloc,GameState>(
           builder: (context,state) {
             return Scaffold(
               appBar: AppBar(
@@ -49,7 +51,20 @@ class GamePage extends StatelessWidget {
                    )
               ],)
             );
-          }
+          },
+          listener: (context,state){
+            if(state.status==GameStatus.win){
+              showDialog(context: context, builder: (context){
+                return Windialog(word: state.word??'');
+              },barrierDismissible: false);//when user clicks outside the dialog, it will not close
+            }
+            if(state.status==GameStatus.loss){
+              showDialog(context: context, builder: (context){
+                return Lossdialog(word: state.word??'');
+              },barrierDismissible: false);//when user clicks outside the dialog, it will not close
+            } 
+            //until i register in gamebloc it wont emit status as loss so wont show dialog
+          },
         ),
       
     );

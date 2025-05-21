@@ -29,6 +29,13 @@ class GamePage extends StatelessWidget {
             attemptsCount: attemptsCount, wordLength: wordLength)),
         child: BlocConsumer<GameBloc,GameState>(
           builder: (context,state) {
+            if(state.status==GameStatus.loading){
+              return Scaffold(
+                body: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Game'),
@@ -49,7 +56,7 @@ class GamePage extends StatelessWidget {
                       context.read<GameBloc>().add(EnterAttemptEvent());
                    },
                    )
-              ],)
+              ],) ,
             );
           },
           listener: (context,state){

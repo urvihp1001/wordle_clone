@@ -19,7 +19,7 @@ class AttemptRow extends StatelessWidget {
         final isCurrentAttempt=attemptIndex==previousAttempts.length;
         return Row(
           children: List.generate(
-           4,
+           word.length,
             (letterIndex) {
               var text= _getLetter(letterIndex, attemptIndex, previousAttempts, currentAttempt, isCurrentAttempt);
               var boxColor=getBoxColor(context, text, word, attemptIndex, letterIndex, previousAttempts, isCurrentAttempt);

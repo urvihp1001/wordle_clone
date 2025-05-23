@@ -19,11 +19,7 @@ class GameState {
       this.attemptsCount});
 
   factory GameState.initial() => GameState._(status: GameStatus.initial,
-  attempts: [],
-  currentAttempt: '',
-  word: '',
-  attemptsCount: 0,
-  errorMessage: null,
+
   );
 
   GameState copyWith(
